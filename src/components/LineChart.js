@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Line } from "react-chartjs-2";
 import numeral from "numeral";
 
@@ -49,38 +49,28 @@ class LineChart extends React.Component {
     }
     componentDidMount() {
       this._getChartData(this.props.type )
-      console.log('Component dit mount!!')
+      // console.log('Component dit mount!!')
     }
 
   
-    // _isChartDataGeted = () => {
-    //   if(!this.state.isLoading){
-    //       if(this.state.chartData.length > 0){
-    //         return true
-    //       }
-    //   }
-    //   return false
-    // }
-
-  render() { 
-
-     
-
   
+  render() { 
   
     let color = this.props.color
     let type = this.props.type 
+    let data = this.props.data
 
-
-   
-    // console.log('ONLINE DATA', this.state.chartData)
-
-    let d = require('../data/historical.all.json')
-    let formatedData = buildChartData(d, type)
-    let data = formatedData
-
+    let formatedData
+    if (data){  
+      // console.log('PROPS DATA')
+      formatedData = buildChartData(data, type)
+    }
+    else {
+      // console.log('STATE DATA')
+      formatedData = this.state.chartData
+    }
     // this._getChartData(type)
-    console.log('RENDER')
+    // console.log('RENDER')
     
 
     return ( 
@@ -92,7 +82,7 @@ class LineChart extends React.Component {
                 {
                     backgroundColor: color.backgroundColor,
                     borderColor: color.borderColor,
-                    data: this.state.chartData,
+                    data: formatedData,
                 },
                 ],
             }}
