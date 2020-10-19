@@ -1,0 +1,20 @@
+.app__dropdown {
+    height: 50%;
+    width: 100%;
+  }
+  
+  .linechart{
+    display: flex;
+    flex:1;
+  
+  }
+  
+  .county_selected{
+    background-color:white;
+  }
+  
+  .code_with_love_image{
+    width:5%;
+    
+  }
+  
