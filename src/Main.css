@@ -71,7 +71,33 @@
 
 /* author(developer) link */
 .main__made_by_author_link{
-    color:red;
+    color:#fc3c3c;;
     margin-left:5px;
     text-decoration:none;
+    font-weight: bold;
+    /* font-family:inherit; */
+}
+
+.main__loading_container {
+    /* background-color: #fc3c3c; */
+    display:flex;
+    flex:1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin:0px;
+
+}
+
+
+ 
+.main__loading_image{
+    width:30%;
+    height: 30%;
+    margin:0px;
+    
+  }
+
+.main_loading_title{
+    margin:0px;
 }
