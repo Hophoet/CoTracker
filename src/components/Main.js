@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import LineChart from './LineChart'
 import {
@@ -5,13 +6,12 @@ import {
     FormControl,
     Select,
     Button,
-    IconButton,
+
     
 
   } from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
 import logo from '../assets/ls.svg'
-import app from '../data/Doitv4.apk'
+import chartGif from '../assets/l.gif'
 
 
 class Main extends Component {
@@ -20,47 +20,57 @@ class Main extends Component {
         this.state = { 
             types: require('../data/historical.all.json'),
             selectedType: 'cases',
+            data: null,
+            isLoading:false
          }
     }
+    componentDidMount(){
+        this._getData()
+    }
 
-    // _formatTypes = (types) => {
-    //         let typesFormated = []
-    //         let objectKeys = Object.keys(types)
-    //         // console.log(objectKeys)
-    //         for(let index in objectKeys){ 
-    //             let key = objectKeys[index]
-    //             // let value = types[key]
-    //             // value.title = key
-    //             // console.log('key '+key)
-    //             // console.log('value '+types[key])
-    //             // let objectClone = new Object()
-    //             // objectClone[key] = {value:index, title:key}
-    //             typesFormated.push({value:index, title:key})
-    //         }
-           
-        
-    //     return typesFormated
-    // }
-    //callback for the cart type selection
-    onTypeChange = async (e) => {
-        //get the selected type
-        const type = e.target.value;
-        //set the selected type to the state
-        // this.setState({selectedType:type})
+    _getData = async (type='cases') => {
+        // console.log('loading data....')
+        this.setState({isLoading:true})
+        this.setState({selectedType:type})
         fetch("https://disease.sh/v3/covid-19/historical/all?lastdays=120")
               .then((response) => {
                 return response.json();
               })
               .then((data) => {
-                console.log('DATA types', data )
+                // console.log('DATA types', data )
+                this.setState({data:data})
+                this.setState({isLoading:false})
+                
          
           
               })
     }
+    //callback for the cart type selection
+    onTypeChange = async (e) => {
+        
+        //get the selected type
+        const type = e.target.value;
+        //set the selected type to the state
+        this._getData(type)
+    }
     
-    
+    _showChart = (colors) => {
+        if(this.state.isLoading){
+            return (
+                <div className="main__loading_container">
+                    <p className='main_loading_title'>loading..</p>
+                    <img className='main__loading_image' src={chartGif} alt='logo'/>
+                    <Button onClick={() => this._getData()} variant="contained">Reload</Button>
+                </div>
+                
+            )
+        }
+        return (
+            <LineChart color={colors[this.state.selectedType]} data={this.state.data} type={this.state.selectedType}/>
+
+        )
+    }
     render() { 
-        //console.log(logo)
         let data = [{title:'deaths', value:1}, {title:'recovered', value:2}]
         let colors = {
             'cases':{backgroundColor: "rgba(204, 16, 52, 0.5)", borderColor: "#CC1034"},
@@ -94,18 +104,16 @@ class Main extends Component {
                         </div>
                     </div>
                     <div className="main__title_container" >
-                        <h2 className="main__title" >COVID-19 Tracker</h2>
+                        <h2 className="main__title" >CoTracker</h2>
                     
                         <p className="main__made_by" >code with 
-                            <img className='code_with_love_image' src={logo} alt='logo'/>
-                        by 
-                            
-                            <a className="main__made_by_author_link" href='https//www.instagram.com/hophoet' target='_blank'>@hophoet</a>
+                            <img className='code_with_love_image' src={logo} alt="loading..." />
+                            by<a className="main__made_by_author_link" rel="noopener noreferrer" href='https://www.instagram.com/hophoet/' target='_blank'>@HOPHOET</a>
                         </p>
                     </div>
                     
                 </div>
-                <LineChart color={colors[this.state.selectedType]} type={this.state.selectedType}/>
+                {this._showChart(colors)}
             </div>
         </div>
          );
